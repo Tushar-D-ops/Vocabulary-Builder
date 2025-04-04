@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.VocabularyBuilder" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#499949</item> <!-- Soft green -->
+        <item name="colorPrimaryVariant">#69d269</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <item name="colorSecondary">#778899</item> <!-- Slate blue -->
+        <item name="colorSecondaryVariant">#5A6E7A</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+
+        <item name="android:windowBackground">#F5F5DC</item> <!-- Classic beige -->
+        <item name="android:textColor">#3E3E3E</item>
+
+        <!-- Use Material Components for consistent look -->
+        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.FilledBox</item>
+
+        <!-- Elevation and rounded corners -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Material3.MediumComponent</item>
+    </style>
+
+    <style name="Theme.VocabularyBuilder" parent="Base.Theme.VocabularyBuilder" />
+</resources>
+

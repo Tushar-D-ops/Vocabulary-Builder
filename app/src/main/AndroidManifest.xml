@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.vocabularybuilder">
+<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+<!--    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>-->
+
+    <application
+        android:theme="@style/Theme.VocabularyBuilder"
+        android:allowBackup="true"
+        android:label="Vocabulary Builder"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true">
+
+<!--    <application-->
+<!--    android:allowBackup="true"-->
+<!--    android:theme="@style/Theme.VocabularyBuilder"-->
+<!--    android:supportsRtl="true"-->
+<!--    android:label="Vocabulary Builder"-->
+<!--    android:icon="@mipmap/ic_launcher">-->
+
+    <!-- Login Page (Launches First) -->
+    <activity android:name=".LoginActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+
+    <!-- Main (Home) Page -->
+    <activity android:name=".MainActivity"
+        android:exported="false"/>
+
+    <activity android:name=".RegisterActivity"
+        android:exported="false"/>
+    <!-- Add New Word Page -->
+    <activity android:name=".AddWordActivity"
+        android:exported="false"/>
+
+    <!-- View Words Page -->
+    <activity android:name=".ViewWordsActivity"
+        android:exported="false"/>
+
+    <!-- Profile Page -->
+    <activity android:name=".ProfileActivity"
+        android:exported="false"/>
+    <activity android:name=".ReminderActivity"/>
+
+    <receiver android:name=".ReminderReceiver" android:exported="false"/>
+
+</application>
+</manifest>
