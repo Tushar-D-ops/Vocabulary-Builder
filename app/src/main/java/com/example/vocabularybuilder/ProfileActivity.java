@@ -1,6 +1,8 @@
 package com.example.vocabularybuilder;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Button;
@@ -42,6 +44,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(view -> {
             // Simply redirect to login (no session logic since we're not storing login state)
+            SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.clear();
+            editor.apply();
+
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear back stack
             startActivity(intent);

@@ -10,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class
+MainActivity extends AppCompatActivity {
     String userEmail;
 
     @Override
@@ -45,15 +46,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-//        btnQuiz.setOnClickListener(view -> {
-//            Intent intent = new Intent(MainActivity.this, QuizActivity.class);
-//            intent.putExtra("email", userEmail);  // ✅ Optional: if needed in quiz
-//            startActivity(intent);
-//        });
+        btnQuiz.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, QuizActivity.class);
+            intent.putExtra("email", userEmail);
+            startActivity(intent);
+        });
 
         btnReminder.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, ReminderActivity.class);
-            intent.putExtra("email", userEmail);  // ✅ Optional: if needed in reminder
+            intent.putExtra("email", userEmail);
             startActivity(intent);
         });
 

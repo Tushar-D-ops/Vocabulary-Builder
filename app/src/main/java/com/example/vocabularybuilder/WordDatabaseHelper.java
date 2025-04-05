@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class WordDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "words.db";
@@ -47,24 +49,21 @@ public class WordDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<String> getAllWords(String email) {
-        ArrayList<String> wordList = new ArrayList<>();
+    // ✅ Keep this method and remove the other getAllWords
+    public List<WordModel> getAllWords(String email) {
+        List<WordModel> wordList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT word, meaning FROM words WHERE email=?", new String[]{email});
 
-        Cursor cursor = db.query(TABLE_WORDS,
-                new String[]{COLUMN_WORD, COLUMN_MEANING},
-                COLUMN_EMAIL + "=?",
-                new String[]{email},
-                null, null, null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
+        if (cursor.moveToFirst()) {
+            do {
                 String word = cursor.getString(0);
                 String meaning = cursor.getString(1);
-                wordList.add(word + " - " + meaning);
-            }
-            cursor.close();
+                wordList.add(new WordModel(word, meaning));
+            } while (cursor.moveToNext());
         }
+
+        cursor.close();
         db.close();
         return wordList;
     }

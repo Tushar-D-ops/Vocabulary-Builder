@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewWordsActivity extends AppCompatActivity {
     ListView listViewWords;
@@ -32,7 +33,13 @@ public class ViewWordsActivity extends AppCompatActivity {
     }
 
     private void loadWords() {
-        ArrayList<String> wordsList = dbHelper.getAllWords(userEmail);
+        List<WordModel> wordModels = dbHelper.getAllWords(userEmail);
+        ArrayList<String> wordsList = new ArrayList<>();
+
+        for (WordModel model : wordModels) {
+            wordsList.add(model.getWord() + " - " + model.getMeaning());
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, wordsList);
         listViewWords.setAdapter(adapter);
     }

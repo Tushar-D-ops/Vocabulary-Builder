@@ -18,7 +18,21 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_login);
+
+        SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPref.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("email", sharedPref.getString("email", ""));
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -36,14 +50,23 @@ public class LoginActivity extends AppCompatActivity {
                 boolean loggedIn = dbHelper.loginUser(email, password);
                 if (loggedIn) {
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences sharedPref1 = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref1.edit();
+                    editor.putBoolean("isLoggedIn", true);
+                    editor.putString("email", email);
+                    editor.apply();
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("email", email);  // pass email to MainActivity
+                    intent.putExtra("email", email);
                     startActivity(intent);
                     finish();
-                    finish();
+
                 } else {
+
                     Toast.makeText(this, "Invalid credentials. Please register.", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, RegisterActivity.class));
+
                 }
             }
         });
