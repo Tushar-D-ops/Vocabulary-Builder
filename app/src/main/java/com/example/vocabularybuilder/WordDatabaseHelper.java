@@ -49,7 +49,6 @@ public class WordDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // ✅ Keep this method and remove the other getAllWords
     public List<WordModel> getAllWords(String email) {
         List<WordModel> wordList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();

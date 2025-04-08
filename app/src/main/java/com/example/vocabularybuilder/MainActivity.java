@@ -6,6 +6,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -13,11 +16,20 @@ import androidx.core.content.ContextCompat;
 public class
 MainActivity extends AppCompatActivity {
     String userEmail;
+    ProgressBar progressBarGoal;
+    TextView tvGoalStatus;
+    int wordsAddedToday = 0;
+    boolean quizTakenToday = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        progressBarGoal = findViewById(R.id.progressBarGoal);
+        tvGoalStatus = findViewById(R.id.tvGoalStatus);
+
+        updateGoalProgress();
 
         // Get the email from LoginActivity or RegisterActivity
         userEmail = getIntent().getStringExtra("email");
@@ -35,6 +47,8 @@ MainActivity extends AppCompatActivity {
         });
 
         btnAddWord.setOnClickListener(view -> {
+            wordsAddedToday++;
+            updateGoalProgress();
             Intent intent = new Intent(MainActivity.this, AddWordActivity.class);
             intent.putExtra("email", userEmail);  // ✅ Pass user email
             startActivity(intent);
@@ -47,6 +61,8 @@ MainActivity extends AppCompatActivity {
         });
 
         btnQuiz.setOnClickListener(view -> {
+            quizTakenToday = true;
+            updateGoalProgress();
             Intent intent = new Intent(MainActivity.this, QuizActivity.class);
             intent.putExtra("email", userEmail);
             startActivity(intent);
@@ -70,4 +86,11 @@ MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void updateGoalProgress() {
+        int progress = Math.min(wordsAddedToday, 2) + (quizTakenToday ? 1 : 0);
+        progressBarGoal.setProgress(progress);
+        tvGoalStatus.setText(progress + "/3 steps completed");
+    }
+
 }

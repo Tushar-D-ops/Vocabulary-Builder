@@ -27,7 +27,7 @@
     <Button
         android:id="@+id/btnProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="👤 Profile"
         android:background="@drawable/rounded_button"
         android:textColor="#FFFFFF"
@@ -38,7 +38,7 @@
     <Button
         android:id="@+id/btnAddWord"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="➕ Add New Word"
         android:background="@drawable/rounded_button"
         android:textColor="#FFFFFF"
@@ -49,7 +49,7 @@
     <Button
         android:id="@+id/btnViewWords"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="📘 View All Saved Words"
         android:background="@drawable/rounded_button"
         android:textColor="#FFFFFF"
@@ -60,7 +60,7 @@
     <Button
         android:id="@+id/btnQuiz"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="📝 Take Quiz"
         android:background="@drawable/rounded_button"
         android:textColor="#FFFFFF"
@@ -71,7 +71,7 @@
     <Button
         android:id="@+id/btnReminder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="⏰ Set Reminder"
         android:background="@drawable/rounded_button"
         android:textColor="#FFFFFF"
@@ -81,6 +81,39 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
+    <!-- Progress Bar Section -->
+    <TextView
+        android:id="@+id/tvGoalProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today's Progress"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#1A3C40"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarGoal"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="0"
+        android:max="3"
+        android:progressTint="#4CAF50"
+        android:backgroundTint="#B0BEC5"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/tvGoalStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0/3 steps completed"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:layout_marginBottom="12dp" />
+
 
     <!-- Bottom Wave -->
     <ImageView

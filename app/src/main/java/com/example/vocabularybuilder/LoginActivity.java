@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,9 +17,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         setContentView(R.layout.activity_login);
 
         SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
@@ -40,6 +36,14 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         dbHelper = new UserDatabaseHelper(this);
 
+        // 👇 Receive values from RegisterActivity if available
+        Intent intent = getIntent();
+        String returnedEmail = intent.getStringExtra("email");
+        String returnedPassword = intent.getStringExtra("password");
+
+        if (returnedEmail != null) etEmail.setText(returnedEmail);
+        if (returnedPassword != null) etPassword.setText(returnedPassword);
+
         btnLogin.setOnClickListener(view -> {
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
@@ -51,30 +55,36 @@ public class LoginActivity extends AppCompatActivity {
                 if (loggedIn) {
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
-                    SharedPreferences sharedPref1 = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref1.edit();
+                    SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("isLoggedIn", true);
                     editor.putString("email", email);
                     editor.apply();
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("email", email);
-                    startActivity(intent);
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                    mainIntent.putExtra("email", email);
+                    startActivity(mainIntent);
                     finish();
-
                 } else {
-
                     Toast.makeText(this, "Invalid credentials. Please register.", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, RegisterActivity.class));
 
+                    // 👇 Send current input to RegisterActivity
+                    Intent regIntent = new Intent(this, RegisterActivity.class);
+                    regIntent.putExtra("email", email);
+                    regIntent.putExtra("password", password);
+                    startActivity(regIntent);
                 }
             }
         });
 
         btnRegister.setOnClickListener(view -> {
-            startActivity(new Intent(this, RegisterActivity.class));
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+
+            // 👇 Pass current input to RegisterActivity
+            Intent regIntent = new Intent(this, RegisterActivity.class);
+            regIntent.putExtra("email", email);
+            regIntent.putExtra("password", password);
+            startActivity(regIntent);
         });
-
-
     }
 }
