@@ -13,6 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.SharedPreferences;
+import java.util.Calendar;
+
 public class
 MainActivity extends AppCompatActivity {
     String userEmail;
@@ -20,6 +25,12 @@ MainActivity extends AppCompatActivity {
     TextView tvGoalStatus;
     int wordsAddedToday = 0;
     boolean quizTakenToday = false;
+
+    SharedPreferences sharedPreferences;
+    final String PREF_NAME = "GoalPrefs";
+    final String KEY_DATE = "lastDate";
+    final String KEY_WORDS = "wordsToday";
+    final String KEY_QUIZ = "quizTaken";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +51,11 @@ MainActivity extends AppCompatActivity {
         Button btnQuiz = findViewById(R.id.btnQuiz);
         Button btnReminder = findViewById(R.id.btnReminder);
 
+        sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        checkAndResetProgress();
+        loadProgress();
+        updateGoalProgress();
+
         btnProfile.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             intent.putExtra("email", userEmail);
@@ -49,6 +65,8 @@ MainActivity extends AppCompatActivity {
         btnAddWord.setOnClickListener(view -> {
             wordsAddedToday++;
             updateGoalProgress();
+            saveProgress();
+            checkIfGoalCompleted();
             Intent intent = new Intent(MainActivity.this, AddWordActivity.class);
             intent.putExtra("email", userEmail);  // ✅ Pass user email
             startActivity(intent);
@@ -63,6 +81,8 @@ MainActivity extends AppCompatActivity {
         btnQuiz.setOnClickListener(view -> {
             quizTakenToday = true;
             updateGoalProgress();
+            saveProgress();
+            checkIfGoalCompleted();
             Intent intent = new Intent(MainActivity.this, QuizActivity.class);
             intent.putExtra("email", userEmail);
             startActivity(intent);
@@ -76,6 +96,43 @@ MainActivity extends AppCompatActivity {
 
         requestNotificationPermission();
     }
+
+    private void checkIfGoalCompleted() {
+        if (wordsAddedToday >= 2 && quizTakenToday) {
+            setNextDayReminder();
+        }
+    }
+
+    private void setNextDayReminder() {
+        Intent intent = new Intent(this, ReminderReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, 20); // 🔁 1 minute later for testing
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
+
+
+//    private void setNextDayReminder() {
+//        Intent intent = new Intent(this, ReminderReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.DAY_OF_YEAR, 1);
+//        calendar.set(Calendar.HOUR_OF_DAY, 9);
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.SECOND, 0);
+//
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        if (alarmManager != null) {
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//        }
+//    }
 
     private void requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -92,5 +149,59 @@ MainActivity extends AppCompatActivity {
         progressBarGoal.setProgress(progress);
         tvGoalStatus.setText(progress + "/3 steps completed");
     }
+
+    private void checkAndResetProgress() {
+        long lastResetTime = sharedPreferences.getLong("lastResetTime", 0);
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - lastResetTime >= 20 * 1000) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong("lastResetTime", currentTime);
+            editor.putInt(KEY_WORDS, 0);
+            editor.putBoolean(KEY_QUIZ, false);
+            editor.apply();
+
+            wordsAddedToday = 0;
+            quizTakenToday = false;
+        }
+    }
+
+
+//    private void checkAndResetProgress() {
+//        String today = getCurrentDate();
+//        String savedDate = sharedPreferences.getString(KEY_DATE, "");
+//
+//        if (!today.equals(savedDate)) {
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putString(KEY_DATE, today);
+//            editor.putInt(KEY_WORDS, 0);
+//            editor.putBoolean(KEY_QUIZ, false);
+//            editor.apply();
+//            wordsAddedToday = 0;
+//            quizTakenToday = false;
+//        }
+//    }
+
+    private String getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return year + "-" + month + "-" + day;
+    }
+
+    private void loadProgress() {
+        wordsAddedToday = sharedPreferences.getInt(KEY_WORDS, 0);
+        quizTakenToday = sharedPreferences.getBoolean(KEY_QUIZ, false);
+    }
+
+    private void saveProgress() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_WORDS, wordsAddedToday);
+        editor.putBoolean(KEY_QUIZ, quizTakenToday);
+        editor.apply();
+    }
+
+
 
 }
